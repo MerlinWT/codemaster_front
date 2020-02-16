@@ -3,6 +3,8 @@ import UserForm from "../components/UserForm";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import config from "../config";
+import store from "../redux/store";
+import {hideLoader, showError, showLoader} from "../redux/actions/laoding";
 
 class UserCreate extends React.Component {
     render() {
@@ -22,6 +24,8 @@ class UserCreate extends React.Component {
     }
 
     createUser = (user) => {
+        store.dispatch(showLoader());
+
         return fetch(`${config.apiServer}/${config.rest.user}`, {
             method: 'POST',
             body: JSON.stringify({
@@ -34,7 +38,8 @@ class UserCreate extends React.Component {
             }
         })
             .then(response => response.json())
-            .then(json => console.log(json))
+            .then(json => store.dispatch(hideLoader()))
+            .catch((error) => store.dispatch(showError(`${error}`)));
     };
 
 }

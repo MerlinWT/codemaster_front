@@ -5,24 +5,16 @@ import Grid from "@material-ui/core/Grid";
 import config from "../config";
 import store from "../redux/store";
 import {hideLoader, showError, showLoader} from "../redux/actions/laoding";
+import {initialize} from "redux-form";
 
 class UserEdit extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            user: {},
-        }
-    }
-
     componentDidMount() {
         store.dispatch(showLoader());
 
         fetch(`${config.apiServer}/${config.rest.user}/${this.props.match.params.id}`)
             .then(response => response.json())
             .then(user => {
-                this.setState({user: this.userMiddleware(user)});
+                store.dispatch(initialize('userForm', this.userMiddleware(user)));
 
                 store.dispatch(hideLoader());
             })
@@ -39,7 +31,6 @@ class UserEdit extends React.Component {
 
                     <UserForm
                         onSubmit={this.updateUser}
-                        user={this.state.user}
                     />
                 </Grid>
             </Grid>
@@ -47,7 +38,9 @@ class UserEdit extends React.Component {
     }
 
     updateUser = (user) => {
-        return fetch(`${config.apiServer}/${config.rest.user}/${user.id}'`, {
+        store.dispatch(showLoader());
+
+        return fetch(`${config.apiServer}/${config.rest.user}/${user.id}`, {
             method: 'PUT',
             body: JSON.stringify({
                 id: 1,
@@ -60,7 +53,8 @@ class UserEdit extends React.Component {
             }
         })
             .then(response => response.json())
-            .then(json => console.log(json))
+            .then(json => store.dispatch(hideLoader()))
+            .catch((error) => store.dispatch(showError(`${error}`)));
     };
 
     userMiddleware(user) {

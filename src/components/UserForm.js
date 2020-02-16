@@ -1,11 +1,10 @@
 import * as React from "react";
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import store from "../redux/store";
-import {hideLoader, showError, showLoader} from "../redux/actions/laoding";
-import {connect} from "react-redux";
-import {setUser} from "../redux/actions/user";
+import {Field, reduxForm} from "redux-form";
+import TextField from "@material-ui/core/TextField";
+
+const required = value => value ? undefined : 'Required'
 
 class UserForm extends React.Component {
     render() {
@@ -15,8 +14,14 @@ class UserForm extends React.Component {
             { name: 'last_name', label: 'Last name'},
         ];
 
+        const renderField = ({ input, label, meta: { touched, error, warning }}) => (
+            <div>
+                <TextField error={touched && error} helperText={touched && error} {...input} fullWidth label={label} />
+            </div>
+        );
+
         return (
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.props.handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Grid container spacing={2}>
@@ -24,12 +29,12 @@ class UserForm extends React.Component {
                             {fields.map((field) => {
                                 return (
                                     <Grid key={field.name} item xs={12}>
-                                        <TextField
-                                            fullWidth
+                                        <Field
                                             name={field.name}
                                             label={field.label}
-                                            value={this.props.user[field.name]}
-                                            onChange={this.onChangeField}
+                                            type={"text"}
+                                            component={renderField}
+                                            validate={[required]}
                                         />
                                     </Grid>
                                 )
@@ -47,7 +52,7 @@ class UserForm extends React.Component {
                             </Grid>
                             <Grid item>
                                 <Button variant="contained" href={"/users"}>
-                                    Cancel
+                                    Go to list
                                 </Button>
                             </Grid>
                         </Grid>
@@ -56,34 +61,7 @@ class UserForm extends React.Component {
             </form>
         );
     }
-
-    onChangeField = (e) => {
-        let field = e.target.name;
-        let value = e.target.value;
-
-        let user = this.props.user;
-        user[field] = value;
-
-        store.dispatch(setUser(user));
-    };
-
-    onSubmit = (e) => {
-        e.preventDefault();
-        store.dispatch(showLoader());
-
-        this.props.onSubmit(this.state.user)
-            .then((result) => {
-                store.dispatch(hideLoader());
-                //TODO show success message
-            })
-            .catch((error) => store.dispatch(showError(`${error}`)));
-
-    };
-
 }
 
-const mapStateToProps = (store) => {
-    console.log(store.user.user);
-    return store.user;
-};
-export default connect(mapStateToProps)(UserForm);
+UserForm = reduxForm({form: 'userForm'})(UserForm);
+export default UserForm;

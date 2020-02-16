@@ -15,7 +15,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.1",
     "react-redux": "latest",
-    "redux": "latest"
+    "redux": "latest",
+    "redux-form": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
