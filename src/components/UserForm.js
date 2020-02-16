@@ -14,9 +14,15 @@ class UserForm extends React.Component {
             { name: 'last_name', label: 'Last name'},
         ];
 
-        const renderField = ({ input, label, meta: { touched, error, warning }}) => (
+        const renderField = ({ input, label, meta: { touched, error }}) => (
             <div>
-                <TextField error={touched && error} helperText={touched && error} {...input} fullWidth label={label} />
+                <TextField
+                    {...input}
+                    fullWidth
+                    error={touched && !!error}
+                    helperText={touched ? error : ''}
+                    label={label}
+                />
             </div>
         );
 
