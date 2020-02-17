@@ -7,24 +7,24 @@ import TextField from "@material-ui/core/TextField";
 const required = value => value ? undefined : 'Required'
 
 class UserForm extends React.Component {
+    renderField = ({ input, label, meta: { touched, error }}) => (
+        <div>
+            <TextField
+                {...input}
+                fullWidth
+                error={touched && !!error}
+                helperText={touched ? error : ''}
+                label={label}
+            />
+        </div>
+    );
+
     render() {
         let fields = [
             { name: 'username', label: 'Username' },
             { name: 'first_name', label: 'First name'},
             { name: 'last_name', label: 'Last name'},
         ];
-
-        const renderField = ({ input, label, meta: { touched, error }}) => (
-            <div>
-                <TextField
-                    {...input}
-                    fullWidth
-                    error={touched && !!error}
-                    helperText={touched ? error : ''}
-                    label={label}
-                />
-            </div>
-        );
 
         return (
             <form onSubmit={this.props.handleSubmit}>
@@ -39,7 +39,7 @@ class UserForm extends React.Component {
                                             name={field.name}
                                             label={field.label}
                                             type={"text"}
-                                            component={renderField}
+                                            component={this.renderField}
                                             validate={[required]}
                                         />
                                     </Grid>
