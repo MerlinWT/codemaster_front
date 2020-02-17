@@ -28,11 +28,7 @@ class UserCreate extends React.Component {
 
         return fetch(`${config.apiServer}/${config.rest.user}`, {
             method: 'POST',
-            body: JSON.stringify({
-                title: 'foo',
-                body: 'bar',
-                userId: 1
-            }),
+            body: JSON.stringify(user),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }

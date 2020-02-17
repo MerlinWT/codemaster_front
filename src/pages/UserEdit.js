@@ -42,12 +42,7 @@ class UserEdit extends React.Component {
 
         return fetch(`${config.apiServer}/${config.rest.user}/${user.id}`, {
             method: 'PUT',
-            body: JSON.stringify({
-                id: 1,
-                title: 'foo',
-                body: 'bar',
-                userId: 1
-            }),
+            body: JSON.stringify(user),
             headers: {
                 "Content-type": "application/json; charset=UTF-8"
             }
@@ -58,13 +53,7 @@ class UserEdit extends React.Component {
     };
 
     userMiddleware(user) {
-        return {
-            id: user.id,
-            username: user.title.substr(0, 2),
-            first_name: user.title.substr(3, 2),
-            last_name: user.title.substr(6, 2),
-            created: user.title.substr(9, 2),
-        }
+        return user;
     }
 
 }

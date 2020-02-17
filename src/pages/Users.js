@@ -37,15 +37,7 @@ class Users extends React.Component {
     }
 
     usersMiddleware(users) {
-        return users.map(item => {
-            return {
-                id: item.id,
-                username: item.title.substr(0, 2),
-                first_name: item.title.substr(3, 2),
-                last_name: item.title.substr(6, 2),
-                created: item.title.substr(9, 2),
-            }
-        });
+        return users;
     }
 
 }
